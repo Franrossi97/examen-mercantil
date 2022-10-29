@@ -46,13 +46,11 @@ public class ProductRequestCreationServiceImpl {
     }
 
     private boolean verifyNewProductRequest(ProductRequestHeaderDto productRequest) {
-        boolean res = productRequest.getAddress() != null &&
+        return productRequest.getAddress() != null &&
                 productRequest.getEmail() != null &&
                 productRequest.getPhone() != null &&
                 productRequest.getTime() != null &&
                 this.checkProductRequestDetails(productRequest.getProductRequestDetails());
-
-        return res;
     }
 
     private boolean checkProductRequestDetails(List<ProductRequestDetailsDto> productRequestDetailsDtos) {
