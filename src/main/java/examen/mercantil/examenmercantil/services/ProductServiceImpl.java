@@ -16,10 +16,20 @@ public class ProductServiceImpl implements ProductService{
     private ProductDao productDao;
 
     @Override
-    public Product createProduct(ProductDto product) {
+    public Product createProduct(ProductDto product) throws ResponseStatusException {
         ModelMapper modelMapper = new ModelMapper();
 
+        if(!this.validateNewProductValues(product)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Los parámetros ingresados no son válidos.");
+        }
+
         return this.productDao.save(modelMapper.map(product, Product.class));
+    }
+
+    private boolean validateNewProductValues(ProductDto product) {
+        return product.getUnitPrice() > 0 &&
+                product.getName() != null;
     }
 
     @Override
