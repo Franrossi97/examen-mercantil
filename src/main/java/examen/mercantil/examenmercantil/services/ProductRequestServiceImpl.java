@@ -12,10 +12,10 @@ import java.util.List;
 public class ProductRequestServiceImpl implements ProductRequestService {
 
     @Autowired
-    ProductRequestCreationServiceImpl productRequestCreationService;
+    private ProductRequestCreationServiceImpl productRequestCreationService;
 
     @Autowired
-    ProductRequestHeaderDao productRequestDao;
+    private ProductRequestHeaderDao productRequestDao;
 
     @Override
     public ProductRequestHeader createProductRequest(ProductRequestHeaderDto productRequest) {

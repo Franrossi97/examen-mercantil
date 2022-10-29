@@ -13,16 +13,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProductServiceImpl implements ProductService{
 
     @Autowired
-    ProductDao productDao;
+    private ProductDao productDao;
 
     @Override
     public Product createProduct(ProductDto product) {
         ModelMapper modelMapper = new ModelMapper();
-        /*Product productEntity = Product.builder()
-                .longDescription(product.getLongDescription())
-                .name(product.getName())
-                .shortDescription(product.getShortDescription())
-                .unitPrice(product.getUnitPrice()).build();*/
 
         return this.productDao.save(modelMapper.map(product, Product.class));
     }
