@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.*;
 public class ProductRequestController {
 
     @Autowired
-    ProductRequestService productRequestService;
+    private ProductRequestService productRequestService;
 
-    @PostMapping(value = "/create")
+    @PostMapping
     public ResponseEntity createProductRequest(@RequestBody ProductRequestHeaderDto productRequestDto) {
+        int aux= -1;
         return new ResponseEntity(this.productRequestService.createProductRequest(productRequestDto), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/find/{date}")
+    @GetMapping(value = "/{date}")
     public ResponseEntity getRequestProductByDate(@PathVariable("date") String date) {
-        System.out.println(date);
         return new ResponseEntity(this.productRequestService.findProductRequestByDate(date), HttpStatus.OK);
     }
 }

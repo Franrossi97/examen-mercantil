@@ -14,15 +14,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProductsController {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
-    @PostMapping(value = "/create")
+    @PostMapping
     public ResponseEntity createProduct(@RequestBody ProductDto product) {
 
         return new ResponseEntity<Product>(this.productService.createProduct(product), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/find/{product_id}")
+    @GetMapping(value = "/{product_id}")
     public ResponseEntity getProduct(@PathVariable("product_id") String productId) {
 
         try {
@@ -32,13 +32,13 @@ public class ProductsController {
         }
     }
 
-    @PutMapping(value = "/edit/{product_id}")
+    @PutMapping(value = "/{product_id}")
     public ResponseEntity editProduct(@PathVariable("product_id") String productId,
                                                @RequestBody ProductDto product) {
         return new ResponseEntity<>(this.productService.editProduct(productId, product), HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/delete/{product_id}")
+    @DeleteMapping(value = "/{product_id}")
     public ResponseEntity deleteProduct(@PathVariable("product_id") String productId) {
         this.productService.deleteProduct(productId);
 
