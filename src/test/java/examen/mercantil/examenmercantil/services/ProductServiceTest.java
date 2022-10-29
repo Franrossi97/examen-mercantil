@@ -11,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -48,6 +50,19 @@ public class ProductServiceTest {
     }
 
     @Test
+    public void createProductWithInvalidValuesTest() {
+        ProductDto productDto = new ProductDto();
+
+        try {
+            productService.createProduct(productDto);
+
+            assert false;
+        } catch (ResponseStatusException e) {
+            assert true;
+        }
+    }
+
+    @Test
     public void findProductTest() {
         ModelMapper modelMapper = new ModelMapper();
 
@@ -62,19 +77,21 @@ public class ProductServiceTest {
         assert resProduct != null;
     }
 
-    /*@Test
+    @Test
     public void findProductTestThrowingError() {
-        ModelMapper modelMapper = new ModelMapper();
-
         ProductDto productResponseDto = this.getProduct();
         productResponseDto.setId("B657");
 
         when(productDao.findById(anyString())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, ""));
 
-        System.out.println(productService.findProduct("B657"));
+        try {
+            productService.findProduct("B657");
 
-        Exception e = productService.findProduct("B657");
-    }*/
+            assert false;
+        } catch (ResponseStatusException e) {
+            assert true;
+        }
+    }
 
     @Test
     public void editProductTest() {
