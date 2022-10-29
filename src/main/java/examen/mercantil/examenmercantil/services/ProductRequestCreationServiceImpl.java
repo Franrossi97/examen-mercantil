@@ -2,13 +2,15 @@ package examen.mercantil.examenmercantil.services;
 
 import examen.mercantil.examenmercantil.daos.ProductDao;
 import examen.mercantil.examenmercantil.daos.ProductRequestHeaderDao;
+import examen.mercantil.examenmercantil.model.dtos.ProductRequestDetailsDto;
 import examen.mercantil.examenmercantil.model.dtos.ProductRequestHeaderDto;
 import examen.mercantil.examenmercantil.model.entities.Product;
-import examen.mercantil.examenmercantil.model.entities.ProductRequestDetails;
 import examen.mercantil.examenmercantil.model.entities.ProductRequestHeader;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,12 +22,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ProductRequestCreationServiceImpl {
 
     @Autowired
-    ProductDao productDao;
+    private ProductDao productDao;
 
     @Autowired
-    ProductRequestHeaderDao productRequestDao;
+    private ProductRequestHeaderDao productRequestDao;
 
-    public ProductRequestHeader createProductRequest(ProductRequestHeaderDto productRequest) {
+    public ProductRequestHeader createProductRequest(ProductRequestHeaderDto productRequest) throws ResponseStatusException {
+
+        if(!this.verifyNewProductRequest(productRequest)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Los parámetros ingresados no son válidos.");
+        }
 
         ModelMapper modelMapper = new ModelMapper();
 
@@ -36,6 +43,26 @@ public class ProductRequestCreationServiceImpl {
         productRequest.setStatus("PENDING");
 
         return this.productRequestDao.save(modelMapper.map(productRequest, ProductRequestHeader.class));
+    }
+
+    private boolean verifyNewProductRequest(ProductRequestHeaderDto productRequest) {
+        boolean res = productRequest.getAddress() != null &&
+                productRequest.getEmail() != null &&
+                productRequest.getPhone() != null &&
+                productRequest.getTime() != null &&
+                this.checkProductRequestDetails(productRequest.getProductRequestDetails());
+
+        return res;
+    }
+
+    private boolean checkProductRequestDetails(List<ProductRequestDetailsDto> productRequestDetailsDtos) {
+        boolean res = true;
+
+        for(int i = 0; res && i < productRequestDetailsDtos.size(); i++) {
+            res = productRequestDetailsDtos.get(i).getQuantity() > 0;
+        }
+
+        return res;
     }
 
     private ProductRequestHeaderDto checkDiscount(ProductRequestHeaderDto productRequest) {
@@ -88,7 +115,7 @@ public class ProductRequestCreationServiceImpl {
         return productRequest;
     }
 
-    private Set<String> generateListOfProductId(List<ProductRequestDetails> productRequestDetails) {
+    private Set<String> generateListOfProductId(List<ProductRequestDetailsDto> productRequestDetails) {
         Set<String> productsId = new HashSet<>();
 
         productRequestDetails.forEach((detail) -> {
@@ -99,7 +126,8 @@ public class ProductRequestCreationServiceImpl {
     }
 
     private List<Product> getProductsById(Set<String> productsId) {
-        return this.productDao.findAllById(productsId);
+        List<Product> aux = this.productDao.findAllById(productsId);
+        return aux;
     }
 
     private Map<String, Product> generateMapOfProductsById(List<Product> products) {
