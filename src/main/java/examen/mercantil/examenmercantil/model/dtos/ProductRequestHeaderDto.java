@@ -1,6 +1,5 @@
 package examen.mercantil.examenmercantil.model.dtos;
 
-import examen.mercantil.examenmercantil.model.entities.ProductRequestDetails;
 import lombok.*;
 
 import java.util.List;
@@ -22,5 +21,5 @@ public class ProductRequestHeaderDto {
     private float totalAmount;
     private boolean discountApplied;
     private String status;
-    private List<ProductRequestDetails> productRequestDetails;
+    private List<ProductRequestDetailsDto> productRequestDetails;
 }
