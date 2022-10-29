@@ -24,10 +24,10 @@ public class Product {
     @Column(name = "nombre", nullable = false)
     private String name;
 
-    @Column(name = "descripcion_corta", nullable = false)
+    @Column(name = "descripcion_corta", nullable = true)
     private String shortDescription;
 
-    @Column(name = "descripcion_larga", nullable = false)
+    @Column(name = "descripcion_larga", nullable = true)
     private String longDescription;
 
     @Column(name = "precio_unitario", nullable = false)
