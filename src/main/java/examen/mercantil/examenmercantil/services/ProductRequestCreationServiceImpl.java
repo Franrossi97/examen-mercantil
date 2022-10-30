@@ -124,8 +124,7 @@ public class ProductRequestCreationServiceImpl {
     }
 
     private List<Product> getProductsById(Set<String> productsId) {
-        List<Product> aux = this.productDao.findAllById(productsId);
-        return aux;
+        return this.productDao.findAllById(productsId);
     }
 
     private Map<String, Product> generateMapOfProductsById(List<Product> products) {
